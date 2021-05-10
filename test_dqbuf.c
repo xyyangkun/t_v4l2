@@ -75,7 +75,8 @@ main (int argc, char **argv)
   fmt.fmt.pix.width = 320;
   fmt.fmt.pix.height = 240;
   // fmt.fmt.pix.pixelformat = V4L2_PIX_FMT_RGB32;
-  fmt.fmt.pix.pixelformat = V4L2_PIX_FMT_YUYV;//v4l2_fourcc('Y', 'U', 'Y', 'V') /* 16  YUV 4:2:2     */;
+  // fmt.fmt.pix.pixelformat = V4L2_PIX_FMT_YUYV;//v4l2_fourcc('Y', 'U', 'Y', 'V') /* 16  YUV 4:2:2     */;
+  fmt.fmt.pix.pixelformat = V4L2_PIX_FMT_MJPG;
 
   if (ioctl (fd, VIDIOC_S_FMT, &fmt) < 0)
     sysfail ("S_FMT");
@@ -162,7 +163,8 @@ main (int argc, char **argv)
 #endif
     bufs[i] = buf;
 
-	write_frame("yuv", count, data[i], buf.length);
+	// write_frame("yuv", count, data[i], buf.length);
+	write_frame("jpg", count, data[i], buf.length);
 	// 停止
 	if(count++ > 2)break;
   }
