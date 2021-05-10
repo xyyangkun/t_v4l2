@@ -3,6 +3,7 @@
  *
  * Copyright (C) 2014 Nicolas Dufresne
  */
+// https://www.cnblogs.com/kevin-heyongyuan/articles/11070935.html
 
 #include <assert.h>
 #include <errno.h>
@@ -28,7 +29,7 @@ usage(const char*progname)
   exit(1);
 }
 
-void write_frame(char *ext, int count, char *data, int len)
+void write_frame(char *ext, int count, void *data, int len)
 {
 	int file;
 	char filename[100];
@@ -160,6 +161,8 @@ main (int argc, char **argv)
     assert (!(buf.flags & (V4L2_BUF_FLAG_QUEUED | V4L2_BUF_FLAG_DONE)));
 #endif
     bufs[i] = buf;
+
+	write_frame("yuv", count, data[i], buf.length);
 	// 停止
 	if(count++ > 2)break;
   }
