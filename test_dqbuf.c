@@ -16,6 +16,7 @@
 #include <sys/types.h>
 
 #include <stdlib.h>
+#include <unistd.h>
 
 #define COUNT 4
 #define sysfail(msg) { printf ("%d %s failed: %s\n", __LINE__, (msg), strerror (errno)); return -1; }
@@ -25,6 +26,20 @@ usage(const char*progname)
 {
   printf("usage: %s <videodevice>\n", progname);
   exit(1);
+}
+
+void write_frame(char *ext, int count, char *data, int len)
+{
+	int file;
+	char filename[100];
+	sprintf(filename, "%s%d.%s",  "frame", count, ext);
+	if((file = open(filename, O_WRONLY | O_CREAT, 0660)) < 0){
+		perror("open");
+		exit(1);
+	}
+ 
+	write(file, data, len);
+	close(file);
 }
 
 int
@@ -109,6 +124,9 @@ main (int argc, char **argv)
     sysfail ("STREAMON");
 
   i = 1;
+  int count = 0;
+
+  // while (1) {
   while (1) {
     struct v4l2_buffer buf = { 0 };
 
@@ -142,6 +160,8 @@ main (int argc, char **argv)
     assert (!(buf.flags & (V4L2_BUF_FLAG_QUEUED | V4L2_BUF_FLAG_DONE)));
 #endif
     bufs[i] = buf;
+	// 停止
+	if(count++ > 2)break;
   }
 #else
 	
